@@ -294,14 +294,18 @@
                 const div = document.createElement('div');
                 div.className = 'bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-purple-400 transition-all';
                 
-                let optionsHtml = item.options.map(opt => `
-                    <button 
-                        onclick="checkAnswer(${idx}, '${opt}', this)" 
-                        class="option-btn bg-white/10 px-6 py-2 rounded-xl font-bold min-w-[120px] text-center"
-                    >
-                        ${opt}
-                    </button>
-                `).join('');
+                // 修正：在 onclick 的參數中轉義單引號，避免 Harry's 或 parents' 造成語法錯誤
+                let optionsHtml = item.options.map(opt => {
+                    const escapedOpt = opt.replace(/'/g, "\\'"); 
+                    return `
+                        <button 
+                            onclick="checkAnswer(${idx}, '${escapedOpt}', this)" 
+                            class="option-btn bg-white/10 px-6 py-2 rounded-xl font-bold min-w-[120px] text-center"
+                        >
+                            ${opt}
+                        </button>
+                    `;
+                }).join('');
 
                 div.innerHTML = `
                     <div class="flex flex-col gap-4">
